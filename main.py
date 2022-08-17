@@ -1,3 +1,4 @@
+
 from datetime import date, datetime
 import math
 from wechatpy import WeChatClient
@@ -17,12 +18,16 @@ app_secret = os.environ["APP_SECRET"]
 user_id = os.environ["USER_ID"]
 template_id = os.environ["TEMPLATE_ID"]
 
+def get_weekday(today):
+  week_list = ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"]
+  weeekday = week_list[today.weekday()]
+  return weeekday
 
 def get_weather():
   url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
   res = requests.get(url).json()
   weather = res['data']['list'][0]
-  return weather['weather'], math.floor(weather['temp'])
+  return weather['weather'],weather['low'],weather['high']
 
 def get_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
@@ -47,7 +52,17 @@ def get_random_color():
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
-wea, temperature = get_weather()
-data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+day = str(today.year)+'年'+str(today.month)+'月'+str(today.day)+'日'+'  '+ get_weekday(today)
+wea, low, high = get_weather()
+
+data = {"date":{"value":day},
+        "city":{"value":city},
+        "weather":{"value":wea},
+        "low":{"value":low},
+        "high":{"value":high},
+        "love_days":{"value":get_count()},
+        #"birthday_left":{"value":get_birthday()},
+        "words":{"value":get_words(), "color":get_random_color()}
+        }
 res = wm.send_template(user_id, template_id, data)
 print(res)
