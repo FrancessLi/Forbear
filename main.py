@@ -62,7 +62,7 @@ data = {"date":{"value":day},
         "high":{"value":high},
         "love_days":{"value":get_count()},
         #"birthday_left":{"value":get_birthday()},
-        "words":{"value":get_words(), "color":get_random_color()}
+        "words":{"value":"熊宝是小虎心中全世界最最最棒的大聪明！今天的考试加油哦！", "color":get_random_color()}
         }
 res = wm.send_template(user_id, template_id, data)
 print(res)
