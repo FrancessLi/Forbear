@@ -6,6 +6,8 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
+import http.client, urllib
+
 
 today = datetime.now()
 start_date = os.environ['START_DATE']
@@ -40,10 +42,15 @@ def get_birthday():
   return (next - today).days
 
 def get_words():
-  words = requests.get("https://api.shadiao.pro/chp")
-  if words.status_code != 200:
-    return get_words()
-  return words.json()['data']['text']
+  conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
+  params = urllib.parse.urlencode({'key':'301692a6922f4900e61059a683cdaf81'})
+  headers = {'Content-type':'application/x-www-form-urlencoded'}
+  conn.request('POST','http://api.tianapi.com/one/index',params,headers)
+  res = conn.getresponse()
+  data = res.read()
+  a = data.decode('utf-8')
+  req = re.findall(r'"word":"(.*?)","wordfrom"',a)[0]
+  return req
 
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
@@ -62,7 +69,7 @@ data = {"date":{"value":day},
         "high":{"value":high},
         "love_days":{"value":get_count()},
         #"birthday_left":{"value":get_birthday()},
-        "words":{"value":"熊宝是小虎心中全世界最最最棒的大聪明！今天的考试加油哦！", "color":get_random_color()}
+        "words":{"value": get_words(), "color":get_random_color()}
         }
 res = wm.send_template(user_id, template_id, data)
 print(res)
