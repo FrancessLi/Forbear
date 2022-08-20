@@ -7,7 +7,7 @@ import requests
 import os
 import random
 import http.client, urllib
-
+import re
 
 today = datetime.now()
 start_date = os.environ['START_DATE']
