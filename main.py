@@ -8,6 +8,7 @@ import os
 import random
 import http.client, urllib
 import re
+import time 
 
 today = datetime.now()
 start_date = os.environ['START_DATE']
@@ -43,7 +44,7 @@ def get_birthday():
 
 def get_words():
   conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
-  params = urllib.parse.urlencode({'key':'301692a6922f4900e61059a683cdaf81','date':'2022-08-21'})
+  params = urllib.parse.urlencode({'key':'301692a6922f4900e61059a683cdaf81','date':time.strftime('%Y-%m-%d',time.localtime(time.time()))})
   headers = {'Content-type':'application/x-www-form-urlencoded'}
   conn.request('POST','http://api.tianapi.com/one/index',params,headers)
   res = conn.getresponse()
