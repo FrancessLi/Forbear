@@ -63,12 +63,12 @@ wm = WeChatMessage(client)
 day = str(today.year)+'年'+str(today.month)+'月'+str(today.day)+'日'+'  '+ get_weekday(today)
 wea, low, high = get_weather()
 
-data = {"date":{"value":day},
-        "city":{"value":city},
-        "weather":{"value":wea},
-        "low":{"value":low},
-        "high":{"value":high},
-        "love_days":{"value":get_count()},
+data = {"date":{"value":day, "color":get_random_color()},
+        "city":{"value":city, "color":get_random_color()},
+        "weather":{"value":wea, "color":get_random_color()},
+        "low":{"value":low, "color":get_random_color()},
+        "high":{"value":high, "color":get_random_color()},
+        "love_days":{"value":get_count(), "color":get_random_color()},
         #"birthday_left":{"value":get_birthday()},
         "words":{"value": get_words(), "color":get_random_color()}
         }
